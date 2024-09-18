@@ -132,6 +132,16 @@ To build the Docker image, run the following command:
 docker build -t my-python-evaluation-function .
 ```
 
+### Running the Docker Image
+
+To run the Docker image, use the following command:
+
+```bash
+docker run -it --rm -p 8080:8080 my-python-evaluation-function
+```
+
+This will start the evaluation function and expose it on port `8080`.
+
 ## Deployment
 
 This section guides you through the deployment process of the evaluation function. If you want to deploy the evaluation function to Lambda Feedback, follow the steps in the [Lambda Feedback](#deploy-to-lambda-feedback) section. Otherwise, you can deploy the evaluation function to other platforms using the [Other Platforms](#deploy-to-other-platforms) section.

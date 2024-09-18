@@ -1,4 +1,4 @@
-FROM ghcr.io/lambda-feedback/evaluation-function-base/python:3.12 as builder
+FROM ghcr.io/lambda-feedback/evaluation-function-base/python:3.12 AS builder
 
 RUN pip install poetry==1.8.3
 
