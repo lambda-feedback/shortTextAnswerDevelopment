@@ -2,11 +2,13 @@ from gpt4all import GPT4All
 import time
 from typing import Any, TypedDict
 try:
-    from .evaluation_response_utilities import EvaluationResponse
+    # from .evaluation_response_utilities import EvaluationResponse
+    from .evaluation_response import Result as EvaluationResponse              # NOTE: instead of importing from lf_toolkit.evaluation as more attributes are added to the class
     from .slm_instructions import build_instruction
     from .nlp_evaluation import evaluation_function as nlp_evaluation_function
 except ImportError:
-    from evaluation_response_utilities import EvaluationResponse
+    # from evaluation_response_utilities import EvaluationResponse
+    from evaluation_response import Result as EvaluationResponse
     from slm_instructions import build_instruction
     from nlp_evaluation import evaluation_function as nlp_evaluation_function
 
@@ -97,11 +99,13 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> EvaluationRe
                 eval_response.is_correct = False
             else:
                 feedback = "The response is contextually {}.".format("correct" if is_correct else "incorrect")
-            eval_response.add_feedback(("feedback", feedback))
+            # eval_response.add_feedback(("feedback", feedback))
+            eval_response.add_feedback("feedback", feedback) # NOTE: lf_toolkit Result in evaluation_response.py
         else:
             eval_response.is_correct = False
             feedback = "<LLM RESPONSE ERROR> The response could not be evaluated."
-            eval_response.add_feedback(("feedback", feedback))
+            # eval_response.add_feedback(("feedback", feedback))
+            eval_response.add_feedback("feedback", feedback) # NOTE: lf_toolkit Result in evaluation_response.py
 
         # print("~~~~~~~~~~~~~~~~")
         # print("Instruction: ", evaluation_instruction)

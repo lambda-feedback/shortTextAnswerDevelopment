@@ -4,12 +4,14 @@ from typing import Any
 try:
     from .nlp_evaluation import evaluation_function as nlp_evaluation_function
     from .slm_evaluation import evaluation_function as slm_evaluation_function
-    from .evaluation_response_utilities import EvaluationResponse
+    # from .evaluation_response_utilities import EvaluationResponse
+    from .evaluation_response import Result as EvaluationResponse              # NOTE: instead of importing from lf_toolkit.evaluation as more attributes are added to the class
     from .slm_rephraser import rephrase_feedback
 except ImportError:
     from nlp_evaluation import evaluation_function as nlp_evaluation_function
     from slm_evaluation import evaluation_function as slm_evaluation_function
-    from evaluation_response_utilities import EvaluationResponse
+    # from evaluation_response_utilities import EvaluationResponse
+    from evaluation_response import Result as EvaluationResponse
     from slm_rephraser import rephrase_feedback
 
 
@@ -73,9 +75,10 @@ def evaluation_function(
 
     # Use the SLM to rephrase the feedback
     rephrased_feedback = rephrase_feedback(response, answer, feedback_layers)
-    eval_response.add_feedback(("feedback", rephrased_feedback))
+    # eval_response.add_feedback(("feedback", rephrased_feedback))
+    eval_response.add_feedback("feedback", rephrased_feedback) # NOTE: lf_toolkit Result in evaluation_response.py
 
-    return eval_response.serialise(include_test_data=include_test_data)
+    return eval_response.to_dict(include_test_data=include_test_data)
 
 def response_handler(eval_response_nlp, eval_response_slm) -> Any:
     tag = ""
@@ -86,21 +89,21 @@ def response_handler(eval_response_nlp, eval_response_slm) -> Any:
         is_correct = True
         feedback_layers = "The response is correct (matched key points and follows the right context)."
         tag = "FEEDBACK_SLM_PASS_NLP_PASS"
-    elif eval_response_slm.is_correct and eval_response_nlp["metadata"]["similarity_value"] > 0.75: # set threshold in nlp_evaluation
+    elif eval_response_slm.is_correct and eval_response_nlp.metadata["similarity_value"] > 0.75: # set threshold in nlp_evaluation
         is_correct = False
-        feedback_layers = "The response is ALMOST correct. But the student missed some key points. " + eval_response_nlp["feedback"] + " " + eval_response_slm["feedback"]
+        feedback_layers = "The response is ALMOST correct. But the student missed some key points. " + eval_response_nlp.feedback + " " + eval_response_slm.feedback
         tag = "FEEDBACK_SLM_PASS_NLP_ALMOST_FAIL"
-    elif eval_response_slm.is_correct and eval_response_nlp["metadata"]["similarity_value"] <= 0.75:
+    elif eval_response_slm.is_correct and eval_response_nlp.metadata["similarity_value"] <= 0.75:
         is_correct = False
-        feedback_layers = "The response is incorrect as the student missed some key points. " + eval_response_nlp["feedback"] + " " + eval_response_slm["feedback"]
+        feedback_layers = "The response is incorrect as the student missed some key points. " + eval_response_nlp.feedback + " " + eval_response_slm.feedback
         tag = "FEEDBACK_SLM_PASS_NLP_FAIL"
     elif eval_response_nlp.is_correct:
         is_correct = False
-        feedback_layers = "The response has pointed out all the key ideas, but its context is wrong." + eval_response_nlp["feedback"] + " " + eval_response_slm["feedback"]
+        feedback_layers = "The response has pointed out all the key ideas, but its context is wrong." + eval_response_nlp.feedback + " " + eval_response_slm.feedback
         tag = "FEEDBACK_SLM_FAIL_NLP_PASS"
     else:
         is_correct = False
-        feedback_layers = "The response is incorrect as its context is wrong. " + eval_response_nlp["feedback"] + " " + eval_response_slm["feedback"]
+        feedback_layers = "The response is incorrect as its context is wrong. " + eval_response_nlp.feedback + " " + eval_response_slm.feedback
         tag = "FEEDBACK_SLM_FAIL_NLP_FAIL"
 
     return feedback_layers, tag, is_correct
