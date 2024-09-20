@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "evaluation_function"
 version = "0.0.1"
-description = ""
-authors = ["Andreas Pfurtscheller <andreas.pfurtscheller23@ic.ac.uk>"]
+description = "short answer questions Evaluation Function"
+authors = ["neagualexa <ngu.alexandra@gmail.com>"]
 readme = "README.md"
 packages = [{ include = "evaluation_function" }]
 
@@ -11,11 +11,20 @@ evaluation_function = "evaluation_function.main:main"
 evaluation_function_dev = "evaluation_function.dev:dev"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.11"
 typing_extensions = "^4.12.2"
 lf_toolkit = { git = "https://github.com/lambda-feedback/toolkit-python.git", branch = "main", extras = [
     "ipc",
 ] }
+numpy = "^1.26.4"
+nltk = "3.8.1"
+gensim = "^4.3.3"
+matplotlib = "^3.9.2"
+certifi = "^2024.8.30"
+requests = "^2.32.3"
+urllib3 = "^2.2.3"
+idna = "^3.10"
+gpt4all = "^2.8.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"

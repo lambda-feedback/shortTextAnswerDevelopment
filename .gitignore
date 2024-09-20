@@ -133,3 +133,12 @@ dmypy.json
 
 # Test reports
 reports/
+
+# MacOS files
+.DS_Store
+
+# Models
+evaluation_function/models/
+
+# Poetry
+poetry.lock
