@@ -3,11 +3,9 @@ from lf_toolkit import create_server, run
 
 try:
     from .evaluation import evaluation_function
-except ImportError:
-    from evaluation import evaluation_function
-try:
     from .preview import preview_function
 except ImportError:
+    from evaluation import evaluation_function
     from preview import preview_function
 
 def main():

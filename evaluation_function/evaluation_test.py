@@ -2,17 +2,11 @@ import unittest
 
 try:
     from .evaluation import evaluation_function
-except ImportError:
-    from evaluation import evaluation_function
-
-try:
     from .nlp_evaluation_tests import TestEvaluationFunction as NLPTestEvaluationFunction
-except ImportError:
-    from nlp_evaluation_tests import TestEvaluationFunction as NLPTestEvaluationFunction
-
-try:
     from .slm_evaluation_tests import TestEvaluationFunction as SLMTestEvaluationFunction
 except ImportError:
+    from evaluation import evaluation_function
+    from nlp_evaluation_tests import TestEvaluationFunction as NLPTestEvaluationFunction
     from slm_evaluation_tests import TestEvaluationFunction as SLMTestEvaluationFunction
 
 class TestEvaluationFunction(unittest.TestCase):
@@ -40,7 +34,7 @@ class TestEvaluationFunction(unittest.TestCase):
     def test_returns_is_correct_true(self):
         response, answer, params = "A xor gate takes 2 inputs", "There are 2 inputs in a xor gate", dict(include_test_data=self.include_test_data)
         result = evaluation_function(response, answer, params)
-        
+
         self.assertEqual(result.get("is_correct"), True)
 
     def test_reynolds_number_is_correct(self):

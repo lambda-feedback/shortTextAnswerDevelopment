@@ -3,18 +3,15 @@ from typing import Any
 
 try:
     from .nlp_evaluation import evaluation_function as nlp_evaluation_function
+    from .slm_evaluation import evaluation_function as slm_evaluation_function
+    from .evaluation_response_utilities import EvaluationResponse
+    from .slm_rephraser import rephrase_feedback
 except ImportError:
     from nlp_evaluation import evaluation_function as nlp_evaluation_function
-
-try:
-    from .slm_evaluation import evaluation_function as slm_evaluation_function
-except ImportError:
     from slm_evaluation import evaluation_function as slm_evaluation_function
-
-try:
-    from .evaluation_response_utilities import EvaluationResponse
-except ImportError:
     from evaluation_response_utilities import EvaluationResponse
+    from slm_rephraser import rephrase_feedback
+
 
 def evaluation_function(
     response: Any,
@@ -70,20 +67,51 @@ def evaluation_function(
     Looking for different mistake scenarios
     """
     # print(eval_response_nlp.serialise(include_test_data=include_test_data), eval_response_slm.serialise(include_test_data=include_test_data))
-    if eval_response_nlp.is_correct and eval_response_slm.is_correct:
-        eval_response.is_correct = True
-        eval_response.add_feedback(("feedback", "The response is correct (matched key points and follows the right context)."))
-    elif eval_response_slm.is_correct and eval_response_nlp["metadata"]["similarity_value"] > 0.75: # set threshold in nlp_evaluation
-        eval_response.is_correct = False
-        eval_response.add_feedback(("feedback", "The response is ALMOST correct. But the student missed some key points. " + eval_response_nlp["feedback"] + " " + eval_response_slm["feedback"]))
-    elif eval_response_slm.is_correct and eval_response_nlp["metadata"]["similarity_value"] <= 0.75:
-        eval_response.is_correct = False
-        eval_response.add_feedback(("feedback", "The response is incorrect as the student missed some key points. " + eval_response_nlp["feedback"] + " " + eval_response_slm["feedback"]))
-    elif eval_response_nlp.is_correct:
-        eval_response.is_correct = False
-        eval_response.add_feedback(("feedback", "The response has pointed out all the key ideas, but its context is wrong. " + eval_response_nlp["feedback"] + " " + eval_response_slm["feedback"]))
-    else:
-        eval_response.is_correct = False
-        eval_response.add_feedback(("feedback", "The response is incorrect as its context is wrong. " + eval_response_nlp["feedback"] + " " + eval_response_slm["feedback"]))
+    feedback_layers, tag, is_correct = response_handler(eval_response_nlp, eval_response_slm)
+    eval_response.add_metadata("tag", tag)
+    eval_response.is_correct = is_correct
+
+    # Use the SLM to rephrase the feedback
+    rephrased_feedback = rephrase_feedback(response, answer, feedback_layers)
+    eval_response.add_feedback(("feedback", rephrased_feedback))
 
     return eval_response.serialise(include_test_data=include_test_data)
+
+def response_handler(eval_response_nlp, eval_response_slm) -> Any:
+    tag = ""
+    feedback_layers = ""
+    is_correct = False
+
+    if eval_response_nlp.is_correct and eval_response_slm.is_correct:
+        is_correct = True
+        feedback_layers = "The response is correct (matched key points and follows the right context)."
+        tag = "FEEDBACK_SLM_PASS_NLP_PASS"
+    elif eval_response_slm.is_correct and eval_response_nlp["metadata"]["similarity_value"] > 0.75: # set threshold in nlp_evaluation
+        is_correct = False
+        feedback_layers = "The response is ALMOST correct. But the student missed some key points. " + eval_response_nlp["feedback"] + " " + eval_response_slm["feedback"]
+        tag = "FEEDBACK_SLM_PASS_NLP_ALMOST_FAIL"
+    elif eval_response_slm.is_correct and eval_response_nlp["metadata"]["similarity_value"] <= 0.75:
+        is_correct = False
+        feedback_layers = "The response is incorrect as the student missed some key points. " + eval_response_nlp["feedback"] + " " + eval_response_slm["feedback"]
+        tag = "FEEDBACK_SLM_PASS_NLP_FAIL"
+    elif eval_response_nlp.is_correct:
+        is_correct = False
+        feedback_layers = "The response has pointed out all the key ideas, but its context is wrong." + eval_response_nlp["feedback"] + " " + eval_response_slm["feedback"]
+        tag = "FEEDBACK_SLM_FAIL_NLP_PASS"
+    else:
+        is_correct = False
+        feedback_layers = "The response is incorrect as its context is wrong. " + eval_response_nlp["feedback"] + " " + eval_response_slm["feedback"]
+        tag = "FEEDBACK_SLM_FAIL_NLP_FAIL"
+
+    return feedback_layers, tag, is_correct
+
+# if __name__ == "__main__":
+#     responses = [
+#         "A GAN is a type of algorithm used to detect fake data on the internet.",
+#         "A GAN is a network that generates data based on fake examples."
+#     ]
+#     answer = "A Generative Adversarial Network (GAN) is a type of machine learning model composed of two neural networks: a generator and a discriminator. The generator creates fake data, while the discriminator tries to distinguish between real and fake data. Through this adversarial process, both networks improve over time, and the generator eventually becomes capable of producing data that closely resembles the real data."
+    
+#     for response in responses:
+#         llm_response = evaluation_function(response, answer, {"include_test_data": True})
+#         print("--------------------")

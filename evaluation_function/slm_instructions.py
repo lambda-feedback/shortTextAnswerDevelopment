@@ -17,6 +17,9 @@ def build_instruction(response, answer, case, keystring=""):
     elif case == 'TEST':
         # TEST CASE
         instruction = base_prompt.format(response=response, answer=answer)
+    elif case == 'rephrase':
+        # CASE for rephrasing
+        instruction = feedback_rephrasing_prompt.format(correct_answer=answer, student_response=response, student_info=keystring)
     else:
         raise ValueError("Invalid case. Please provide a valid case: 'include', 'exclude_word' or 'similarity'")
 
@@ -53,3 +56,15 @@ Score: [Insert score]
 Comment: [Insert explanation about the discrepancies found.]
 
 """
+
+feedback_rephrasing_prompt = """You are an expert educator tasked with providing helpful feedback using the below information on the student's response on a question:
+Correct answer: '{correct_answer}'
+Student response: '{student_response}'
+Feedback information: '{student_info}'
+Be sure to provide constructive feedback that helps the student understand their mistakes and improve their understanding of the topic. 
+Be clear and concise in your feedback, and provide examples where necessary.
+The feedback must be maximally 100 words.
+
+A:
+"""
+# NOTE: it was noticed that Phi-3 starts its response with 'A:' 

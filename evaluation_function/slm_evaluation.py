@@ -3,18 +3,13 @@ import time
 from typing import Any, TypedDict
 try:
     from .evaluation_response_utilities import EvaluationResponse
-except ImportError:
-    from evaluation_response_utilities import EvaluationResponse
-
-try:
     from .slm_instructions import build_instruction
-except ImportError:
-    from slm_instructions import build_instruction
-
-try:
     from .nlp_evaluation import evaluation_function as nlp_evaluation_function
 except ImportError:
+    from evaluation_response_utilities import EvaluationResponse
+    from slm_instructions import build_instruction
     from nlp_evaluation import evaluation_function as nlp_evaluation_function
+
 
 class Params(TypedDict):
     pass

@@ -1,6 +1,9 @@
 import unittest
 
-from .preview import Params, preview_function
+try:
+    from .preview import Params, preview_function
+except ImportError:
+    from preview import Params, preview_function
 
 class TestPreviewFunction(unittest.TestCase):
     """
