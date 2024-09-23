@@ -7,6 +7,7 @@ from typing import Union
 
 FeedbackItem = Tuple[str, str]
 
+# TODO: this is the problem that causes docker to fail, but I cannot find the reason 
 
 def update_feedback(
     feedback: Dict[str, List[str]], feedback_items: List[FeedbackItem]
@@ -21,12 +22,14 @@ def update_feedback(
 
 
 class Result:
-    __slots__ = ("is_correct", "response_latex", "response_simplified", "_feedback",
+    __slots__ = ("is_correct", 
+                #  "response_latex", "response_simplified", 
+                 "_feedback",
                  "_metadata", "_processing_time", "_evaluation_type")
     __fields__ = (
         "is_correct",
-        "response_latex",
-        "response_simplified",
+        # "response_latex",
+        # "response_simplified",
         "feedback",
         "tags",
         "metadata",
@@ -35,8 +38,8 @@ class Result:
     )
 
     is_correct: bool
-    response_latex: str
-    response_simplified: str
+    # response_latex: str
+    # response_simplified: str
 
     _feedback: Dict[str, List[str]]
 
@@ -47,16 +50,16 @@ class Result:
     def __init__(
         self,
         is_correct: bool = False,
-        latex: str = "",
-        simplified: str = "",
+        # latex: str = "",
+        # simplified: str = "",
         feedback_items: List[FeedbackItem] = [],
         metadata: Dict[str, Any] = {},
         processing_time: float = 0,
-        evaluation_type: str = None,
+        evaluation_type: str = "",
     ):
         self.is_correct = is_correct
-        self.response_latex = latex
-        self.response_simplified = simplified
+        # self.response_latex = latex
+        # self.response_simplified = simplified
         self._feedback = update_feedback({}, feedback_items)
         self._metadata = metadata
         self._processing_time = processing_time
@@ -111,14 +114,14 @@ class Result:
             "feedback": self.feedback,
         }
 
-        if self.response_simplified:
-            res["response_simplified"] = self.response_simplified
-        if self.response_latex:
-            res["response_latex"] = self.response_latex
+        # if self.response_simplified:
+        #     res["response_simplified"] = self.response_simplified
+        # if self.response_latex:
+        #     res["response_latex"] = self.response_latex
         if include_test_data:
             res["tags"] = self.tags
-            if len(self._metadata) > 0:
-                res["metadata"] = self._metadata
+            if len(self.metadata) > 0:
+                res["metadata"] = self.metadata
             if self._processing_time >= 0:
                 res["processing_time"] = self._processing_time
             if self._evaluation_type:

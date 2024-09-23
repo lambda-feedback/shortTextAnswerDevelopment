@@ -78,7 +78,8 @@ def evaluation_function(
     # eval_response.add_feedback(("feedback", rephrased_feedback))
     eval_response.add_feedback("feedback", rephrased_feedback) # NOTE: lf_toolkit Result in evaluation_response.py
 
-    return eval_response.to_dict(include_test_data=include_test_data)
+    return eval_response
+    # return eval_response.to_dict(include_test_data=include_test_data) # NOTE: expected non serialised output
 
 def response_handler(eval_response_nlp, eval_response_slm) -> Any:
     tag = ""
