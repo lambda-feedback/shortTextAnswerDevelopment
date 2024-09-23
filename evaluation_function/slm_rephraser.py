@@ -9,9 +9,15 @@ except ImportError:
     from slm_instructions import build_instruction
     from slm_evaluation import model
 
-def rephrase_feedback(response: Any, answer: Any, info: Any) -> Any:
-    instruction = build_instruction(response, answer, 'rephrase', info)
+def rephrase_feedback(response: Any, answer: Any, info: Any, custom_feedback=False) -> Any:
+
+    instruction = ""
+    if custom_feedback:
+        instruction = build_instruction(response, answer, 'rephrase_custom', info)
+    else:
+        instruction = build_instruction(response, answer, 'rephrase', info)
     # print(instruction)
+
     response = model.generate(instruction, max_tokens=150)
 
     processed_response = process_llm_response(response)

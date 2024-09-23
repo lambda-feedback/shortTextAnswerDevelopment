@@ -70,14 +70,20 @@ def evaluation_function(
     """
     # print(eval_response_nlp.serialise(include_test_data=include_test_data), eval_response_slm.serialise(include_test_data=include_test_data))
     feedback_layers, tag, is_correct = response_handler(eval_response_nlp, eval_response_slm)
-    eval_response.add_metadata("tag", tag)
-    eval_response.is_correct = is_correct
 
-    # Use the SLM to rephrase the feedback
-    rephrased_feedback = rephrase_feedback(response, answer, feedback_layers)
+    # STEP A: check for custom feedback tag in the feedback
+    custom_feedback, custom_feedback_layers = check_custom_feedback(eval_response_nlp.feedback)
+    if custom_feedback:
+        tag = "CUSTOM_FEEDBACK"
+        feedback_layers = custom_feedback_layers
+
+    # STEP B: Use the SLM to rephrase the feedback
+    rephrased_feedback = rephrase_feedback(response, answer, feedback_layers, custom_feedback)
+
     # eval_response.add_feedback(("feedback", rephrased_feedback))
     eval_response.add_feedback("feedback", rephrased_feedback) # NOTE: lf_toolkit Result in evaluation_response.py
-
+    eval_response.is_correct = is_correct
+    eval_response.add_metadata("tag", tag)
     return eval_response
     # return eval_response.to_dict(include_test_data=include_test_data) # NOTE: expected non serialised output
 
@@ -108,6 +114,12 @@ def response_handler(eval_response_nlp, eval_response_slm) -> Any:
         tag = "FEEDBACK_SLM_FAIL_NLP_FAIL"
 
     return feedback_layers, tag, is_correct
+
+def check_custom_feedback(feedback):
+    if "CUSTOM_FEEDBACK" in feedback:
+        # cut out the CUSTOM_FEEDBACK tag from the feedback and return the feedback
+        return True, feedback.replace("CUSTOM_FEEDBACK", "")
+    return False, feedback
 
 # if __name__ == "__main__":
 #     responses = [

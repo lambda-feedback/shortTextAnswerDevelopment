@@ -86,7 +86,7 @@ def evaluation_function(response, answer, params) -> EvaluationResponse:
                 feedback = f"Identified '{problematic_keystring}' in the answer, which was not expected."
 
             if custom_feedback is not None:
-                feedback = f"Cannot determine if the answer is correct. {custom_feedback}"
+                feedback = f"Cannot determine if the answer is correct. {custom_feedback} CUSTOM_FEEDBACK"
 
         if problematic_keystring is not None:
             # eval_response.add_feedback(("feedback", feedback))

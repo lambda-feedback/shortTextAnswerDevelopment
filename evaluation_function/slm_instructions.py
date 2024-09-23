@@ -20,6 +20,9 @@ def build_instruction(response, answer, case, keystring=""):
     elif case == 'rephrase':
         # CASE for rephrasing
         instruction = feedback_rephrasing_prompt.format(correct_answer=answer, student_response=response, student_info=keystring)
+    elif case == 'rephrase_custom':
+        # CASE for rephrasing custom feedback
+        instruction = custom_feedback_rephrasing_prompt.format(custom_feedback=keystring)
     else:
         raise ValueError("Invalid case. Please provide a valid case: 'include', 'exclude_word' or 'similarity'")
 
@@ -68,3 +71,8 @@ The feedback must be maximally 100 words.
 A:
 """
 # NOTE: it was noticed that Phi-3 starts its response with 'A:' 
+
+custom_feedback_rephrasing_prompt = """You are an expert educator tasked with rephrasing the below feedback:
+Feedback information: '{custom_feedback}'
+
+A:"""
