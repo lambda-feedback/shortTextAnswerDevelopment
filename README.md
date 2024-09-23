@@ -199,3 +199,40 @@ git merge template/main --allow-unrelated-histories
 
 > [!WARNING]
 > Make sure to resolve any conflicts and keep the changes you want to keep.
+
+## Troubleshooting
+
+### Containerized Evaluation Function Fails to Start
+
+If your evaluation function is working fine when run locally, but not when containerized, there is much more to consider. Here are some common issues and solution approaches:
+
+**Run-time dependencies**
+
+Make sure that all run-time dependencies are installed in the Docker image.
+
+- Python packages: Make sure to add the dependency to the `pyproject.toml` file, and run `poetry install` in the Dockerfile.
+- System packages: If you need to install system packages, add the installation command to the Dockerfile.
+- ML models: If your evaluation function depends on ML models, make sure to include them in the Docker image.
+- Data files: If your evaluation function depends on data files, make sure to include them in the Docker image.
+
+**Architecture**
+
+Some package may not be compatible with the architecture of the Docker image. Make sure to use the correct platform when building and running the Docker image.
+
+E.g. to build a Docker image for the `linux/x86_64` platform, use the following command:
+
+```bash
+docker build --platform=linux/x86_64 .
+```
+
+**Verify Standalone Execution**
+
+If requests are timing out, it might be due to the evaluation function not being able to run. Make sure that the evaluation function can be run as a standalone script. This will help you to identify issues that are specific to the containerized environment.
+
+To run just the evaluation function as a standalone script, without using Shimmy, use the following command:
+
+```bash
+docker run -it --rm my-python-evaluation-function python -m evaluation_function.main
+```
+
+If the command starts without any errors, the evaluation function is working correctly. If not, you will see the error message in the console.
