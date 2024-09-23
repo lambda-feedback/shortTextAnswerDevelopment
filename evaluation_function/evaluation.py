@@ -84,8 +84,9 @@ def evaluation_function(
     eval_response.add_feedback("feedback", rephrased_feedback) # NOTE: lf_toolkit Result in evaluation_response.py
     eval_response.is_correct = is_correct
     eval_response.add_metadata("tag", tag)
-    return eval_response
-    # return eval_response.to_dict(include_test_data=include_test_data) # NOTE: expected non serialised output
+
+    # NOTE: expected serialised output for the server handler called by main.py
+    return eval_response.to_dict(include_test_data=include_test_data)
 
 def response_handler(eval_response_nlp, eval_response_slm) -> Any:
     tag = ""

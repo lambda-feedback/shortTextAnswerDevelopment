@@ -1,3 +1,4 @@
+# Layer 1: Build the virtual environment
 FROM ghcr.io/lambda-feedback/evaluation-function-base/python:3.11 AS builder
 
 RUN pip install poetry==1.8.3
@@ -13,18 +14,8 @@ RUN poetry lock
 RUN --mount=type=cache,target=$POETRY_CACHE_DIR \
     poetry install --without dev --no-root
 
-FROM ghcr.io/lambda-feedback/evaluation-function-base/python:3.11
-
-ENV VIRTUAL_ENV=/app/.venv \
-    PATH="/app/.venv/bin:$PATH"
-
-COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
-
-# Precompile python files for faster startup
-RUN python -m compileall -q .
-
-# Copy the evaluation function to the app directory
-COPY evaluation_function ./evaluation_function
+# Layer 2: Download NLTK models
+FROM ghcr.io/lambda-feedback/evaluation-function-base/python:3.11 AS nltk_models
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
@@ -62,6 +53,26 @@ RUN unzip /usr/share/nltk_data/tokenizers/punkt_tab.zip -d /usr/share/nltk_data/
 RUN rm /usr/share/nltk_data/corpora/*.zip
 RUN rm /usr/share/nltk_data/models/*.zip
 RUN rm /usr/share/nltk_data/tokenizers/*.zip
+
+# Layer 3: Final image
+FROM ghcr.io/lambda-feedback/evaluation-function-base/python:3.11
+
+ENV VIRTUAL_ENV=/app/.venv \
+    PATH="/app/.venv/bin:$PATH"
+
+ENV NLTK_DATA=/usr/share/nltk_data \
+    PATH="/usr/share/nltk_data:$PATH"
+
+COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
+COPY --from=nltk_models ${NLTK_DATA} ${NLTK_DATA}
+
+# Precompile python files for faster startup
+RUN python -m compileall -q .
+
+# Copy the evaluation function to the app directory
+COPY evaluation_function ./evaluation_function
+
+ENV EVAL_RPC_TRANSPORT="ipc"
 
 # Command to start the evaluation function with
 ENV FUNCTION_COMMAND="python"

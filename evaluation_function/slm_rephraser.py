@@ -1,6 +1,4 @@
-from gpt4all import GPT4All
-import time
-from typing import Any, TypedDict
+from typing import Any
 
 try:
     from .slm_instructions import build_instruction

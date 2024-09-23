@@ -118,7 +118,7 @@ In its most basic form, the development workflow consists of writing the evaluat
 Testing the evaluation function can be done by running the `dev.py` script using the Python interpreter like so:
 
 ```bash
-python -m evaluation_function.dev <response> <answer>
+python -m evaluation_function.dev <response> <answer> <(optional)params>
 ```
 
 > [!NOTE]
@@ -129,7 +129,7 @@ python -m evaluation_function.dev <response> <answer>
 To build the Docker image, run the following command:
 
 ```bash
-docker build -t my-python-evaluation-function .
+docker build -t my-python-evaluation-function --platform=linux/x86_64 .
 ```
 
 ### Running the Docker Image
@@ -137,7 +137,7 @@ docker build -t my-python-evaluation-function .
 To run the Docker image, use the following command:
 
 ```bash
-docker run -it --rm -p 8080:8080 my-python-evaluation-function
+docker run -it --rm -p 8080:8080 -e EXPERIMENTAL_DOCKER_DESKTOP_FORCE_QEMU=1 --platform=linux/x86_64 my-python-evaluation-function
 ```
 
 This will start the evaluation function and expose it on port `8080`.

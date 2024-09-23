@@ -16,7 +16,7 @@ def dev():
     
     answer = sys.argv[1]
     response = sys.argv[2]
-    params = sys.argv[3] if len(sys.argv[3]) > 0 else dict()
+    params = sys.argv[3] if len(sys.argv) > 3 else "{}"
     # parse params into a dict
     try:
         params = json.loads(params)
@@ -33,7 +33,10 @@ def dev():
 
     result = evaluation_function(answer, response, params)
 
-    print(result.to_dict())
+    if type(result) == dict:
+        print(result)
+    else:
+        print(result.to_dict())
 
 if __name__ == "__main__":
     dev()
