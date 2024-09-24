@@ -15,7 +15,7 @@ RUN --mount=type=cache,target=$POETRY_CACHE_DIR \
     poetry install --without dev --no-root
 
 # Layer 2: Download NLTK models
-FROM ghcr.io/lambda-feedback/evaluation-function-base/python:3.11 AS nltk_models
+FROM ghcr.io/lambda-feedback/evaluation-function-base/python:3.11 AS models
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
@@ -66,8 +66,12 @@ ENV VIRTUAL_ENV=/app/.venv \
 ENV NLTK_DATA=/usr/share/nltk_data \
     PATH="/usr/share/nltk_data:$PATH"
 
+ENV MODEL_PATH=/app/evaluation_function/models \
+    PATH="/app/evaluation_function/models:$PATH"
+
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
-COPY --from=nltk_models ${NLTK_DATA} ${NLTK_DATA}
+COPY --from=models ${NLTK_DATA} ${NLTK_DATA}
+COPY --from=models ${MODEL_PATH} ${MODEL_PATH}
 
 # Precompile python files for faster startup
 RUN python -m compileall -q .
