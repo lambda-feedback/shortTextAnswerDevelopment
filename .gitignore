@@ -137,8 +137,11 @@ reports/
 # MacOS files
 .DS_Store
 
-# Models
-evaluation_function/models/
+# Testing
+evaluation_function/testing/
+
+# Models - to be added manually
+evaluation_function/models/*
 
 # Poetry
 poetry.lock
