@@ -33,7 +33,7 @@ class TestEvaluationFunction(unittest.TestCase):
 
     def test_returns_is_correct_true(self):
         response, answer, params = "A xor gate takes 2 inputs", "There are 2 inputs in a xor gate", dict(include_test_data=self.include_test_data)
-        result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+        result = evaluation_function(response, answer, params)
 
         self.assertEqual(result.get("is_correct"), True)
 
@@ -53,7 +53,7 @@ class TestEvaluationFunction(unittest.TestCase):
         ]
 
         for response in correct_responses:
-            result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+            result = evaluation_function(response, answer, params)
 
             self.assertEqual(result.get("is_correct"), True, msg=f'{result}, Answer: {answer}, Response: {response}')
 
@@ -65,7 +65,7 @@ class TestEvaluationFunction(unittest.TestCase):
         ]
 
         for response in incorrect_responses:
-            result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+            result = evaluation_function(response, answer, params)
 
             self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}, Response: {response}')
 
@@ -77,7 +77,7 @@ class TestEvaluationFunction(unittest.TestCase):
         ]
 
         for response in incorrect_responses:
-            result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+            result = evaluation_function(response, answer, params)
 
             self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}')
 
@@ -90,7 +90,7 @@ class TestEvaluationFunction(unittest.TestCase):
         ]
 
         for response in incorrect_responses:
-            result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+            result = evaluation_function(response, answer, params)
 
             self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}')
 
@@ -103,7 +103,7 @@ class TestEvaluationFunction(unittest.TestCase):
         ]
 
         for response in incorrect_responses:
-            result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+            result = evaluation_function(response, answer, params)
 
             self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}')
 
@@ -116,7 +116,7 @@ class TestEvaluationFunction(unittest.TestCase):
         ]
 
         for response in incorrect_responses:
-            result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+            result = evaluation_function(response, answer, params)
 
             self.assertIn('banana', result.get("feedback"), msg=f'{result}, Answer: {answer}')
 
@@ -143,7 +143,7 @@ class TestEvaluationFunction(unittest.TestCase):
         ]
 
         for response in correct_responses:
-            result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+            result = evaluation_function(response, answer, params)
             self.assertEqual(result.get("is_correct"), True, msg=f'{result}, Answer: {answer}')
 
     def test_combined_evaluation_negation(self):
@@ -154,7 +154,7 @@ class TestEvaluationFunction(unittest.TestCase):
         ]
 
         for response in correct_responses:
-            result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+            result = evaluation_function(response, answer, params)
             self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}')
 
 class TestEvaluationComputingFunction(unittest.TestCase):
@@ -172,7 +172,7 @@ class TestEvaluationComputingFunction(unittest.TestCase):
         params = {"include_test_data": True}
 
         for response in responses:
-            result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+            result = evaluation_function(response, answer, params)
             self.assertEqual(result.get("is_correct"), True, msg=f'{result}, Answer: {answer}, Response: {response}')
     
     def test_networking_1_wrong(self):
@@ -185,7 +185,7 @@ class TestEvaluationComputingFunction(unittest.TestCase):
         params = {"include_test_data": True}
 
         for response in responses:
-            result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+            result = evaluation_function(response, answer, params)
             self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}, Response: {response}')
 
     answer_ml_1 = "A Generative Adversarial Network (GAN) is a type of machine learning model composed of two neural networks: a generator and a discriminator. The generator creates fake data, while the discriminator tries to distinguish between real and fake data. Through this adversarial process, both networks improve over time, and the generator eventually becomes capable of producing data that closely resembles the real data."
@@ -201,7 +201,7 @@ class TestEvaluationComputingFunction(unittest.TestCase):
             "include_test_data": True}
 
         for response in responses:
-            result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+            result = evaluation_function(response, answer, params)
             self.assertEqual(result.get("is_correct"), True, msg=f'{result}, Answer: {answer}, Response: {response}')
 
     def test_ml_1_wrong(self):
@@ -213,7 +213,7 @@ class TestEvaluationComputingFunction(unittest.TestCase):
         params = {"include_test_data": True}
 
         for response in responses:
-            result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+            result = evaluation_function(response, answer, params)
             self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}, Response: {response}')
 
     def test_ml_2_wrong(self):
@@ -226,7 +226,7 @@ class TestEvaluationComputingFunction(unittest.TestCase):
             "include_test_data": True}
 
         for response in responses:
-            result = evaluation_function(response, answer, params).to_dict(include_test_data=self.include_test_data)
+            result = evaluation_function(response, answer, params)
             self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}, Response: {response}')
 
 def load_tests(loader, tests, pattern):
