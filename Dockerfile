@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 #  ----- For MaxOS development
 RUN mkdir -p /usr/share/nltk_data/corpora /usr/share/nltk_data/models /usr/share/nltk_data/tokenizers
+RUN mkdir -p /app/evaluation_function/models
 
 # NLTK data downloads
 RUN wget -O /usr/share/nltk_data/corpora/wordnet.zip https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/wordnet.zip
@@ -53,6 +54,8 @@ RUN unzip /usr/share/nltk_data/tokenizers/punkt_tab.zip -d /usr/share/nltk_data/
 RUN rm /usr/share/nltk_data/corpora/*.zip
 RUN rm /usr/share/nltk_data/models/*.zip
 RUN rm /usr/share/nltk_data/tokenizers/*.zip
+
+RUN wget -O /app/evaluation_function/models/Phi-3.5-mini-instruct-Q6_K.gguf https://huggingface.co/bartowski/Phi-3.5-mini-instruct-GGUF/resolve/main/Phi-3.5-mini-instruct-Q6_K.gguf
 
 # Layer 3: Final image
 FROM ghcr.io/lambda-feedback/evaluation-function-base/python:3.11
