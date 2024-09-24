@@ -1,4 +1,5 @@
 from typing import Any
+import time
 # from lf_toolkit.evaluation import Result, Params
 
 try:
@@ -53,6 +54,7 @@ def evaluation_function(
     Output:
     - EvaluationResponse: A class that contains the evaluation results with feedback
     """
+    start_time = time.process_time()
 
     eval_response = EvaluationResponse()
     eval_response.is_correct = False
@@ -64,6 +66,9 @@ def evaluation_function(
     # NOTE: Layer responses are classes and are not serialised
     eval_response_nlp = nlp_evaluation_function(response, answer, params)
     eval_response_slm = slm_evaluation_function(response, answer, params)
+    eval_response.add_metadata("nlp_similarity_value", eval_response_nlp.metadata["similarity_value"])
+    eval_response.add_metadata("nlp_processing_time", eval_response_nlp.get_processing_time())
+    eval_response.add_metadata("slm_processing_time", eval_response_slm.get_processing_time())
 
     """
     Looking for different mistake scenarios
@@ -84,6 +89,9 @@ def evaluation_function(
     eval_response.add_feedback("feedback", rephrased_feedback) # NOTE: lf_toolkit Result in evaluation_response.py
     eval_response.is_correct = is_correct
     eval_response.add_metadata("tag", tag)
+
+    end_time = time.process_time()
+    eval_response.add_processing_time(end_time - start_time)
 
     # NOTE: expected serialised output for the server handler called by main.py
     return eval_response.to_dict(include_test_data=include_test_data)

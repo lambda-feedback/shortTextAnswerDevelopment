@@ -16,7 +16,7 @@ except ImportError:
 class Params(TypedDict):
     pass
 
-model = GPT4All(model_name="Phi-3.5-mini-instruct-Q6_K.gguf",model_path="evaluation_function/models/", allow_download=False) # downloads / loads the model
+model = GPT4All(model_name="Phi-3.5-mini-instruct-Q6_K.gguf",model_path="evaluation_function/models/", allow_download=False, device="cpu") # downloads / loads the model
 # instruction = "Compare the following two sections: Response='{response}' & Answer='{answer}'. Write 'True' if the response perfectly matches the answer, 'False' otherwise. Do not provide any explanation."
 
 def evaluation_function(response: Any, answer: Any, params: Any) -> EvaluationResponse:
@@ -110,8 +110,6 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> EvaluationRe
         # print("~~~~~~~~~~~~~~~~")
         # print("Instruction: ", evaluation_instruction)
         # print("Feedback:", llm_response)
-        # for feedback_index in eval_response.get_feedback("feedback"):
-        #     print(eval_response._feedback[feedback_index])
         # print("-- Time taken to generate response: ", end_time - start_time, " seconds --")
 
     return eval_response
