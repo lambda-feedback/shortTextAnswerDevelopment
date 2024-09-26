@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.12"]
+        python-version: ["3.11"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -57,6 +57,16 @@ jobs:
         run: |
           poetry install  --no-interaction --no-root
 
+          python -m nltk.downloader wordnet
+          python -m nltk.downloader word2vec_sample
+          python -m nltk.downloader brown
+          python -m nltk.downloader stopwords
+          python -m nltk.downloader punkt
+          python -m nltk.downloader punkt_tab
+
+          mkdir -p ./evaluation_function/models
+          wget -O ./evaluation_function/models/Phi-3.5-mini-instruct-Q6_K.gguf https://huggingface.co/bartowski/Phi-3.5-mini-instruct-GGUF/resolve/main/Phi-3.5-mini-instruct-Q6_K.gguf
+
       # TODO: add linting / black / flake8
       # - name: Lint with flake8
       #   run: |
@@ -84,6 +94,8 @@ jobs:
     name: Build Docker Image
     uses: lambda-feedback/evaluation-function-workflows/.github/workflows/build.yml@main
     needs: test
+    with:
+      build-args: "memory=10240m"
     permissions:
       contents: read
       id-token: write
@@ -95,6 +107,7 @@ jobs:
     needs: test
     with:
       template-repository-name: "lambda-feedback/evaluation-function-boilerplate-python"
+      build-args: "memory=10240m"
     permissions:
       contents: read
       id-token: write
