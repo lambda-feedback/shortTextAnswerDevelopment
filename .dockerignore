@@ -145,3 +145,6 @@ data/
 
 # Test reports
 reports/
+
+# Models to be downloaded from the internet
+evaluation_function/models/

@@ -1,6 +1,7 @@
 import sys
+import json
 
-from lf_toolkit.shared.params import Params
+# from lf_toolkit.shared.params import Params
 
 from .evaluation import evaluation_function
 
@@ -15,10 +16,27 @@ def dev():
     
     answer = sys.argv[1]
     response = sys.argv[2]
+    params = sys.argv[3] if len(sys.argv) > 3 else "{}"
+    # parse params into a dict
+    try:
+        params = json.loads(params)
+    except json.JSONDecodeError:
+        print("Invalid JSON string for params")
+        return
+    
+    if 'include_test_data' not in params:
+        params['include_test_data'] = False
 
-    result = evaluation_function(answer, response, Params())
+    print(f"Answer: {answer}")
+    print(f"Response: {response}")
+    print(f"Params: {params}")
 
-    print(result.to_dict())
+    result = evaluation_function(answer, response, params)
+
+    if type(result) == dict:
+        print(result)
+    else:
+        print(result.to_dict())
 
 if __name__ == "__main__":
     dev()
