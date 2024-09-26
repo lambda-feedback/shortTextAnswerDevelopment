@@ -108,7 +108,7 @@ class TestEvaluationFunction(unittest.TestCase):
         for response in incorrect_responses:
             result = evaluation_function(response, answer, params)
 
-            self.assertIn('banana', result._feedback[result.get_feedback('feedback')[0]], msg=f'Response: {response}')
+            self.assertIn('banana', result.get_feedback('feedback')[0], msg=f'Response: {response}')
 
     navier_stokes_answer = "The density of the film is uniform and constant, therefore the flow is incompressible. " \
                            "Since we have incompressible flow, uniform viscosity, Newtonian fluid, " \
