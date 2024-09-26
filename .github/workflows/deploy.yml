@@ -62,7 +62,6 @@ jobs:
           unzip 
 
           mkdir -p /usr/share/nltk_data/corpora /usr/share/nltk_data/models /usr/share/nltk_data/tokenizers
-          mkdir -p /app/evaluation_function/models
 
           # NLTK data downloads
           wget -O /usr/share/nltk_data/corpora/wordnet.zip https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/wordnet.zip
