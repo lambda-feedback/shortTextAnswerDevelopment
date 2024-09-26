@@ -21,15 +21,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     unzip 
 
-#  ----- For Linux development
-# # Warnings: those commands sometimes download corrupted zips, so it is better to wget each package from the main site
-# RUN python -m nltk.downloader wordnet
-# RUN python -m nltk.downloader word2vec_sample
-# RUN python -m nltk.downloader brown
-# RUN python -m nltk.downloader stopwords
-# RUN python -m nltk.downloader punkt
-# RUN python -m nltk.downloader punkt_tab
-
 #  ----- For MaxOS development
 RUN mkdir -p /usr/share/nltk_data/corpora /usr/share/nltk_data/models /usr/share/nltk_data/tokenizers
 RUN mkdir -p /app/evaluation_function/models
@@ -63,11 +54,9 @@ FROM ghcr.io/lambda-feedback/evaluation-function-base/python:3.11
 ENV VIRTUAL_ENV=/app/.venv \
     PATH="/app/.venv/bin:$PATH"
 
-ENV NLTK_DATA=/usr/share/nltk_data \
-    PATH="/usr/share/nltk_data:$PATH"
+ENV NLTK_DATA=/usr/share/nltk_data 
 
-ENV MODEL_PATH=/app/evaluation_function/models \
-    PATH="/app/evaluation_function/models:$PATH"
+ENV MODEL_PATH=/app/evaluation_function/models 
 
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY --from=models ${NLTK_DATA} ${NLTK_DATA}
@@ -78,6 +67,15 @@ RUN python -m compileall -q .
 
 # Copy the evaluation function to the app directory
 COPY evaluation_function ./evaluation_function
+
+#  ----- For Linux development instead of Layer 2 NLTK downloads
+# # Warnings: those commands sometimes download corrupted zips, so it is better to wget each package from the main site
+# RUN python -m nltk.downloader wordnet
+# RUN python -m nltk.downloader word2vec_sample
+# RUN python -m nltk.downloader brown
+# RUN python -m nltk.downloader stopwords
+# RUN python -m nltk.downloader punkt
+# RUN python -m nltk.downloader punkt_tab
 
 ENV EVAL_RPC_TRANSPORT="ipc"
 
