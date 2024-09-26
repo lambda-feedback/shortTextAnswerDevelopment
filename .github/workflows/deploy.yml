@@ -113,7 +113,6 @@ jobs:
     uses: lambda-feedback/evaluation-function-workflows/.github/workflows/build.yml@main
     needs: test
     with:
-      build-args: "memory=10240m"
       platforms: "linux/x86_64"
     permissions:
       contents: read
@@ -126,7 +125,6 @@ jobs:
     needs: test
     with:
       template-repository-name: "lambda-feedback/evaluation-function-boilerplate-python"
-      build-args: "memory=10240m"
       build-platforms: "linux/x86_64"
     permissions:
       contents: read
