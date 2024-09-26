@@ -47,45 +47,43 @@ jobs:
 
       - name: Load cached venv
         id: dependencies-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .venv
           key: venv-${{ runner.os }}-${{ steps.python-setup.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
-      - name: Install dependencies
+      - name: Install python dependencies
         if: steps.dependencies-cache.outputs.cache-hit != 'true'
         run: |
           poetry install  --no-interaction --no-root
 
-          apt-get update && apt-get install -y --no-install-recommends \
-          wget \
-          unzip 
+      - name: Load cached NLTK data
+        id: nltk-cache
+        uses: actions/cache@v4
+        with:
+          path: /usr/share/nltk_data
+          key: nltk-data-${{ hashFiles('scripts/download_nltk.sh') }}
 
-          mkdir -p /usr/share/nltk_data/corpora /usr/share/nltk_data/models /usr/share/nltk_data/tokenizers
+      - name: Download NLTK data
+        if: steps.nltk-cache.outputs.cache-hit != 'true'
+        env:
+          NLTK_DATA: /usr/share/nltk_data
+        run: |
+          ./scripts/download_nltk.sh
 
-          # NLTK data downloads
-          wget -O /usr/share/nltk_data/corpora/wordnet.zip https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/wordnet.zip
-          wget -O /usr/share/nltk_data/models/word2vec_sample.zip https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/models/word2vec_sample.zip
-          wget -O /usr/share/nltk_data/corpora/brown.zip https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/brown.zip
-          wget -O /usr/share/nltk_data/corpora/stopwords.zip https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/stopwords.zip
-          wget -O /usr/share/nltk_data/tokenizers/punkt.zip https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/tokenizers/punkt.zip
-          wget -O /usr/share/nltk_data/tokenizers/punkt_tab.zip https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/tokenizers/punkt_tab.zip
+      - name: Load cached models
+        id: models-cache
+        uses: actions/cache@v4
+        with:
+          path: /usr/share/nltk_data
+          key: models-${{ hashFiles('scripts/download_models.sh') }}
 
-          # Unzip the downloaded NLTK data
-          unzip /usr/share/nltk_data/corpora/wordnet.zip -d /usr/share/nltk_data/corpora/
-          unzip /usr/share/nltk_data/models/word2vec_sample.zip -d /usr/share/nltk_data/models/
-          unzip /usr/share/nltk_data/corpora/brown.zip -d /usr/share/nltk_data/corpora/
-          unzip /usr/share/nltk_data/corpora/stopwords.zip -d /usr/share/nltk_data/corpora/
-          unzip /usr/share/nltk_data/tokenizers/punkt.zip -d /usr/share/nltk_data/tokenizers/
-          unzip /usr/share/nltk_data/tokenizers/punkt_tab.zip -d /usr/share/nltk_data/tokenizers/
-
-          # Clean up zip files to reduce image size
-          rm /usr/share/nltk_data/corpora/*.zip
-          rm /usr/share/nltk_data/models/*.zip
-          rm /usr/share/nltk_data/tokenizers/*.zip
-
-          mkdir -p ./evaluation_function/models
-          wget -O ./evaluation_function/models/Phi-3.5-mini-instruct-Q6_K.gguf https://huggingface.co/bartowski/Phi-3.5-mini-instruct-GGUF/resolve/main/Phi-3.5-mini-instruct-Q6_K.gguf
+      - name: Download NLTK data
+        if: steps.models-cache.outputs.cache-hit != 'true'
+        env:
+          MODEL_PATH: ./evaluation_function/models
+        run: |
+          ./scripts/download_models.sh
 
       # TODO: add linting / black / flake8
       # - name: Lint with flake8
