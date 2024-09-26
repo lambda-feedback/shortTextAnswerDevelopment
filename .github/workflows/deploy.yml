@@ -78,7 +78,7 @@ jobs:
           path: ./evaluation_function/models
           key: models-${{ hashFiles('scripts/download_models.sh') }}
 
-      - name: Download NLTK data
+      - name: Download models
         if: steps.models-cache.outputs.cache-hit != 'true'
         env:
           MODEL_PATH: ./evaluation_function/models
