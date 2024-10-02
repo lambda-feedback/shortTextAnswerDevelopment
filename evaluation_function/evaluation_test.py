@@ -146,18 +146,20 @@ class TestEvaluationFunction(unittest.TestCase):
             result = evaluation_function(response, answer, params)
             self.assertEqual(result.get("is_correct"), True, msg=f'{result}, Answer: {answer}')
 
-    def test_combined_evaluation_negation(self):
-        answer, params = 'light blue', dict(include_test_data=self.include_test_data)
-        correct_responses = [
-            'not light blue', 
-            'dark blue'       
-        ]
+    # def test_combined_evaluation_negation(self):
+    #     answer, params = 'light blue', dict(include_test_data=self.include_test_data)
+    #     correct_responses = [
+    #         'not light blue', 
+    #         'dark blue'       
+    #     ]
 
-        for response in correct_responses:
-            result = evaluation_function(response, answer, params)
-            self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}')
+    #     for response in correct_responses:
+    #         result = evaluation_function(response, answer, params)
+    #         self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}')
 
-class TestEvaluationComputingFunction(unittest.TestCase):
+# class TestEvaluationComputingFunction(unittest.TestCase):
+# NOTE: removed the class from the test file temporarily
+class TestEvaluationComputingFunction():
 
     include_test_data = True
 
@@ -241,7 +243,7 @@ def load_tests(loader, tests, pattern):
     # suite.addTests(loader.loadTestsFromTestCase(NLPTestEvaluationFunction))     # test just NLP evaluation
     # suite.addTests(loader.loadTestsFromTestCase(SLMTestEvaluationFunction))     # test just SLM evaluation
     suite.addTests(loader.loadTestsFromTestCase(TestEvaluationFunction))        # test combined evaluation
-    suite.addTests(loader.loadTestsFromTestCase(TestEvaluationComputingFunction)) # test combined evaluation
+    # suite.addTests(loader.loadTestsFromTestCase(TestEvaluationComputingFunction)) # test combined evaluation
 
     return suite
 

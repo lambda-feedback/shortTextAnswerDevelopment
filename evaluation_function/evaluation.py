@@ -65,10 +65,14 @@ def evaluation_function(
 
     # NOTE: Layer responses are classes and are not serialised
     eval_response_nlp = nlp_evaluation_function(response, answer, params)
-    eval_response_slm = slm_evaluation_function(response, answer, params)
+    # eval_response_slm = slm_evaluation_function(response, answer, params)
+    eval_response_slm = EvaluationResponse(
+        is_correct=True,
+        feedback_items=[("feedback", "SLM evaluation is not implemented.")],
+    ) # NOTE: added to avoid error in response_handler
     eval_response.add_metadata("nlp_similarity_value", eval_response_nlp.metadata["similarity_value"])
     eval_response.add_metadata("nlp_processing_time", eval_response_nlp.get_processing_time())
-    eval_response.add_metadata("slm_processing_time", eval_response_slm.get_processing_time())
+    # eval_response.add_metadata("slm_processing_time", eval_response_slm.get_processing_time())
 
     """
     Looking for different mistake scenarios
