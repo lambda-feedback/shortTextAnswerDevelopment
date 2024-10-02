@@ -158,78 +158,77 @@ class TestEvaluationFunction(unittest.TestCase):
     #         self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}')
 
 # class TestEvaluationComputingFunction(unittest.TestCase):
-# NOTE: removed the class from the test file temporarily
-class TestEvaluationComputingFunction():
+# # NOTE: removed the class from the test file temporarily
 
-    include_test_data = True
+#     include_test_data = True
 
-    answer_networking_1 = "A networking algorithm is a set of rules or instructions designed to manage the operations of a computer network. These algorithms help in tasks like routing data between devices, managing traffic to avoid congestion, and ensuring data packets reach their destination efficiently and reliably."
+#     answer_networking_1 = "A networking algorithm is a set of rules or instructions designed to manage the operations of a computer network. These algorithms help in tasks like routing data between devices, managing traffic to avoid congestion, and ensuring data packets reach their destination efficiently and reliably."
 
-    def test_networking_1_correct(self):
-        answer = self.answer_networking_1
-        responses = [
-            "A networking algorithm is a method that helps in determining how data moves across a network, like deciding the best path for data packets to travel.",
-            "Networking algorithms guide the way data is transferred through a network, making sure everything is sent smoothly and efficiently without congestion."
-        ]
-        params = {"include_test_data": True}
+#     def test_networking_1_correct(self):
+#         answer = self.answer_networking_1
+#         responses = [
+#             "A networking algorithm is a method that helps in determining how data moves across a network, like deciding the best path for data packets to travel.",
+#             "Networking algorithms guide the way data is transferred through a network, making sure everything is sent smoothly and efficiently without congestion."
+#         ]
+#         params = {"include_test_data": True}
 
-        for response in responses:
-            result = evaluation_function(response, answer, params)
-            self.assertEqual(result.get("is_correct"), True, msg=f'{result}, Answer: {answer}, Response: {response}')
+#         for response in responses:
+#             result = evaluation_function(response, answer, params)
+#             self.assertEqual(result.get("is_correct"), True, msg=f'{result}, Answer: {answer}, Response: {response}')
     
-    def test_networking_1_wrong(self):
-        answer = self.answer_networking_1
-        responses = [
-            "A networking algorithm is the software used to connect computers to the internet, kind of like Wi-Fi or Bluetooth.",
-            "A networking algorithm is a program that sends data from one computer to another.",
-            "It’s a set of steps or instructions used in networks to control how information is sent and received between devices.", #similarity 0.69 < threshold , recommend to mention 'routing'
-        ]
-        params = {"include_test_data": True}
+#     def test_networking_1_wrong(self):
+#         answer = self.answer_networking_1
+#         responses = [
+#             "A networking algorithm is the software used to connect computers to the internet, kind of like Wi-Fi or Bluetooth.",
+#             "A networking algorithm is a program that sends data from one computer to another.",
+#             "It’s a set of steps or instructions used in networks to control how information is sent and received between devices.", #similarity 0.69 < threshold , recommend to mention 'routing'
+#         ]
+#         params = {"include_test_data": True}
 
-        for response in responses:
-            result = evaluation_function(response, answer, params)
-            self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}, Response: {response}')
+#         for response in responses:
+#             result = evaluation_function(response, answer, params)
+#             self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}, Response: {response}')
 
-    answer_ml_1 = "A Generative Adversarial Network (GAN) is a type of machine learning model composed of two neural networks: a generator and a discriminator. The generator creates fake data, while the discriminator tries to distinguish between real and fake data. Through this adversarial process, both networks improve over time, and the generator eventually becomes capable of producing data that closely resembles the real data."
+#     answer_ml_1 = "A Generative Adversarial Network (GAN) is a type of machine learning model composed of two neural networks: a generator and a discriminator. The generator creates fake data, while the discriminator tries to distinguish between real and fake data. Through this adversarial process, both networks improve over time, and the generator eventually becomes capable of producing data that closely resembles the real data."
 
-    def test_ml_1_correct(self):
-        answer = self.answer_ml_1
-        responses = [
-            "A GAN is a machine learning system with two networks: one generates fake data, and the other tries to spot the fake from the real, helping both improve.",
-            "A GAN uses two neural networks that work against each other. The generator makes fake data, and the discriminator figures out if it’s real or fake."
-        ]
-        params = { 
-            "keystrings": [{"string": "generator of fake data"}, {"string": "discriminates fake from real"}, {"string": "two neural networks"}],
-            "include_test_data": True}
+#     def test_ml_1_correct(self):
+#         answer = self.answer_ml_1
+#         responses = [
+#             "A GAN is a machine learning system with two networks: one generates fake data, and the other tries to spot the fake from the real, helping both improve.",
+#             "A GAN uses two neural networks that work against each other. The generator makes fake data, and the discriminator figures out if it’s real or fake."
+#         ]
+#         params = { 
+#             "keystrings": [{"string": "generator of fake data"}, {"string": "discriminates fake from real"}, {"string": "two neural networks"}],
+#             "include_test_data": True}
 
-        for response in responses:
-            result = evaluation_function(response, answer, params)
-            self.assertEqual(result.get("is_correct"), True, msg=f'{result}, Answer: {answer}, Response: {response}')
+#         for response in responses:
+#             result = evaluation_function(response, answer, params)
+#             self.assertEqual(result.get("is_correct"), True, msg=f'{result}, Answer: {answer}, Response: {response}')
 
-    def test_ml_1_wrong(self):
-        answer = self.answer_ml_1
-        responses = [
-            "A GAN is a type of algorithm used to detect fake data on the internet.",
-            "A GAN is a network that generates data based on fake examples."
-        ]
-        params = {"include_test_data": True}
+#     def test_ml_1_wrong(self):
+#         answer = self.answer_ml_1
+#         responses = [
+#             "A GAN is a type of algorithm used to detect fake data on the internet.",
+#             "A GAN is a network that generates data based on fake examples."
+#         ]
+#         params = {"include_test_data": True}
 
-        for response in responses:
-            result = evaluation_function(response, answer, params)
-            self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}, Response: {response}')
+#         for response in responses:
+#             result = evaluation_function(response, answer, params)
+#             self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}, Response: {response}')
 
-    def test_ml_2_wrong(self):
-        answer = self.answer_ml_1
-        responses = [
-            "It’s a model where two networks compete: one creates data, and the other tries to detect if it’s real or not. This makes the generator get better over time." # similarity of 0.71, not enough detail regarding 'generator of fake data'
-        ]
-        params = {
-            "keystrings": [{"string": "generator of fake data"}, {"string": "discriminates fake from real"}, {"string": "two neural networks"}],
-            "include_test_data": True}
+#     def test_ml_2_wrong(self):
+#         answer = self.answer_ml_1
+#         responses = [
+#             "It’s a model where two networks compete: one creates data, and the other tries to detect if it’s real or not. This makes the generator get better over time." # similarity of 0.71, not enough detail regarding 'generator of fake data'
+#         ]
+#         params = {
+#             "keystrings": [{"string": "generator of fake data"}, {"string": "discriminates fake from real"}, {"string": "two neural networks"}],
+#             "include_test_data": True}
 
-        for response in responses:
-            result = evaluation_function(response, answer, params)
-            self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}, Response: {response}')
+#         for response in responses:
+#             result = evaluation_function(response, answer, params)
+#             self.assertEqual(result.get("is_correct"), False, msg=f'{result}, Answer: {answer}, Response: {response}')
 
 def load_tests(loader, tests, pattern):
     """
