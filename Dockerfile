@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY ./scripts ./scripts
 
-RUN ./scripts/download_models.sh
+# RUN ./scripts/download_models.sh
 RUN ./scripts/download_nltk.sh
 
 # Layer 3: Final image
