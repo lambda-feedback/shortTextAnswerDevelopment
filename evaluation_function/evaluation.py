@@ -63,16 +63,14 @@ def evaluation_function(
     if "include_test_data" in params:
         include_test_data = params["include_test_data"]
 
+    return nlp_evaluation_function(response, answer, params).to_dict(include_test_data=include_test_data)
+
     # NOTE: Layer responses are classes and are not serialised
     eval_response_nlp = nlp_evaluation_function(response, answer, params)
-    # eval_response_slm = slm_evaluation_function(response, answer, params)
-    eval_response_slm = EvaluationResponse(
-        is_correct=True,
-        feedback_items=[("feedback", "SLM evaluation is not implemented.")],
-    ) # NOTE: added to avoid error in response_handler
+    eval_response_slm = slm_evaluation_function(response, answer, params)
     eval_response.add_metadata("nlp_similarity_value", eval_response_nlp.metadata["similarity_value"])
     eval_response.add_metadata("nlp_processing_time", eval_response_nlp.get_processing_time())
-    # eval_response.add_metadata("slm_processing_time", eval_response_slm.get_processing_time())
+    eval_response.add_metadata("slm_processing_time", eval_response_slm.get_processing_time())
 
     """
     Looking for different mistake scenarios
@@ -89,8 +87,8 @@ def evaluation_function(
     # STEP B: Use the SLM to rephrase the feedback
     rephrased_feedback = rephrase_feedback(response, answer, feedback_layers, custom_feedback)
 
-    eval_response.add_feedback(("feedback", rephrased_feedback))
-    # eval_response.add_feedback("feedback", rephrased_feedback) # NOTE: lf_toolkit Result in evaluation_response.py
+    # eval_response.add_feedback(("feedback", rephrased_feedback))
+    eval_response.add_feedback("feedback", rephrased_feedback) # NOTE: lf_toolkit Result in evaluation_response.py
     eval_response.is_correct = is_correct
     eval_response.add_metadata("tag", tag)
 
@@ -98,8 +96,7 @@ def evaluation_function(
     eval_response.add_processing_time(end_time - start_time)
 
     # NOTE: expected serialised output for the server handler called by main.py
-    return eval_response.serialise(include_test_data=include_test_data)
-    # return eval_response.to_dict(include_test_data=include_test_data)
+    return eval_response.to_dict(include_test_data=include_test_data)
 
 def response_handler(eval_response_nlp, eval_response_slm) -> Any:
     tag = ""
