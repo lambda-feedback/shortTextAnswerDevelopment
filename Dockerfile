@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY ./scripts ./scripts
 
-# RUN ./scripts/download_models.sh
+RUN ./scripts/download_models.sh
 RUN ./scripts/download_nltk.sh
 
 # Layer 3: Final image
@@ -48,7 +48,7 @@ RUN python -m compileall -q .
 
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY --from=models ${NLTK_DATA} ${NLTK_DATA}
-# COPY --from=models ${MODEL_PATH} ${MODEL_PATH}
+COPY --from=models ${MODEL_PATH} ${MODEL_PATH}
 
 #  ----- For Linux development instead of Layer 2 NLTK downloads
 # # Warnings: those commands sometimes download corrupted zips, so it is better to wget each package from the main site

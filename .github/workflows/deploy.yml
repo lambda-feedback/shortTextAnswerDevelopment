@@ -78,12 +78,12 @@ jobs:
           path: ./evaluation_function/models
           key: models-${{ hashFiles('scripts/download_models.sh') }}
 
-      # - name: Download models
-      #   if: steps.models-cache.outputs.cache-hit != 'true'
-      #   env:
-      #     MODEL_PATH: ./evaluation_function/models
-      #   run: |
-      #     ./scripts/download_models.sh
+      - name: Download models
+        if: steps.models-cache.outputs.cache-hit != 'true'
+        env:
+          MODEL_PATH: ./evaluation_function/models
+        run: |
+          ./scripts/download_models.sh
 
       # TODO: add linting / black / flake8
       # - name: Lint with flake8

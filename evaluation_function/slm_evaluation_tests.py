@@ -5,9 +5,7 @@ try:
 except ImportError:
     from slm_evaluation import evaluation_function
 
-# class TestEvaluationFunction(unittest.TestCase):
-# NOTE: removed the class from the test file temporarily 
-class TestEvaluationFunction():
+class TestEvaluationFunction(unittest.TestCase):
     """
         TestCase Class used to test the algorithm.
         ---

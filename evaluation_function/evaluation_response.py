@@ -7,8 +7,6 @@ from typing import Union
 
 FeedbackItem = Tuple[str, str]
 
-# TODO: this is the problem that causes docker to fail, but I cannot find the reason 
-
 def update_feedback(
     feedback: Dict[str, List[str]], feedback_items: List[FeedbackItem]
 ) -> Dict[str, List[str]]:
