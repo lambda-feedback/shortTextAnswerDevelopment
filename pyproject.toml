@@ -22,6 +22,10 @@ requests = "^2.32.3"
 urllib3 = "^2.2.3"
 idna = "^3.10"
 gpt4all = "^2.8.2"
+lf_toolkit = { git = "https://github.com/lambda-feedback/toolkit-python.git", branch = "main", extras = [
+    "parsing",
+    "ipc",
+] }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
