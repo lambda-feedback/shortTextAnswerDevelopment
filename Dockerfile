@@ -59,6 +59,12 @@ COPY --from=models ${MODEL_PATH} ${MODEL_PATH}
 # RUN python -m nltk.downloader punkt
 # RUN python -m nltk.downloader punkt_tab
 
+# Worker process start timeout to allow shimmy to start considering all downloads
+ENV FUNCTION_WORKER_SEND_TIMEOUT=600
+
+# Worker process stop timeout to allow shimmy to stop the container
+ENV FUNCTION_WORKER_STOP_TIMEOUT=300
+
 ENV EVAL_RPC_TRANSPORT="ipc"
 
 # Command to start the evaluation function with
