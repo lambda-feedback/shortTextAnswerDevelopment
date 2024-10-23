@@ -55,4 +55,4 @@ RUN chmod 644 $(find ./app/ -type f)
 RUN chmod 755 $(find ./app/ -type d)
 
 # The entrypoint for AWS is to invoke the handler function within the app package
-CMD [ "/app/app.handler" ]
+CMD [ "python -m app.handler" ]
