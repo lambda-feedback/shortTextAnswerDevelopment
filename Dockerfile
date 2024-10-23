@@ -63,6 +63,7 @@ COPY --from=models ${MODEL_PATH} ${MODEL_PATH}
 ENV FUNCTION_WORKER_SEND_TIMEOUT="600s"
 
 # Worker process stop timeout to allow shimmy to stop the container
+# TODO: adapter_rpc retry delay errors -> to be fixed
 ENV FUNCTION_WORKER_STOP_TIMEOUT="300s"
 
 ENV EVAL_RPC_TRANSPORT="ipc"
